@@ -1,0 +1,178 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+}
+
+input {
+    cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0px;
+    padding: 0px;
+    font-weight: normal;
+}
+
+.header_title {
+    font-size: 120%;
+    font-weight: bold;
+    padding-bottom: 5px;
+    margin-top: -10px;
+}
+
+
+.panel {
+    position: fixed;
+    padding: 20px;
+    background-color: rgb(0,128,128,0.9);
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 5px 5px 10px rgb(0,255,0);
+    cursor: default;
+}
+
+.right_panel {
+    width: 250px;
+    right: 20px;
+}
+
+#algorithm_panel {
+    right: 20px;
+    top: 20px;
+}
+
+#instructions_panel {
+    top: 20px;
+    left: 20px;
+    width: 550px;
+}
+
+#detail_panel {
+    top: 200px;
+    left: 20px;
+    width: 550px;
+}
+
+#hide_detail {
+    position: absolute;
+    right: 25px;
+    top: 10px;
+    font-size: 90%;
+    cursor: pointer;
+}
+
+#hide_instructions {
+    position: absolute;
+    right: 25px;
+    top: 10px;
+    font-size: 90%;
+    cursor: pointer;
+}
+
+#hide_instruction:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.option_header {
+    font-size: 80%;
+    margin-left: 20px;
+}
+
+.option_label {
+    cursor: pointer;
+}
+
+button {
+    border: none;
+    background: rgba(255,255,0, 0.9);
+    border-radius: 5px;
+    font-size: 90%;
+    cursor: pointer;
+    padding: 2px 8px;
+    margin: 0 2%;
+    width: 28%;
+}
+
+button:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.finder_section {
+    border: solid 1px #ddd;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.sub_options {
+    padding: 2px;
+    font-size: 14px;
+    margin: 2px 30px 0;
+}
+
+#stats {
+    position: fixed;
+    bottom: 50px;
+    left: 45px;
+    color: maroon;
+    font-size: 95%;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+}
+
+a {
+    color: #ffff00;
+}
+
+footer {
+    color: maroon;
+    font-size: 70%;
+    text-align: center;
+    position: fixed;
+    width: 200px;
+    bottom: 10px;
+    left: 50%;
+    margin-left: -100px;
+    background: rgba(255,255,255, 0.5);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.black {
+    color: #000000;
+}
+
+.yellow {
+    color: #ffff00;
+}
+
+.blue {
+    color: #00ffff;
+}
+
+.spinner {
+    width: 2em;
+}
+.btn-space {
+	margin-right: 5px;
+}
+.success {
+	transition : background-color 0.08s ease-in-out;
+	background-color: #ffee31;
+	border-color: #ffee31;
+}
+#modalTitleContainer {
+	padding-top: 10px;
+}
+#infoModalBtn {
+	margin-left: 20px;
+}
+
+.fun-fact {
+	color: darkgreen;
+}
+.btn-space {
+	margin-right: 5px;
+}

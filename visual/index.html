@@ -1,0 +1,594 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>PathFinding.js</title>
+
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./lib/themes/jquery.ui.all.css" />
+    
+    
+    
+    <!-- <link rel="stylesheet" type="text/css" href="./styles/main.css"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./styles/magic.min.css">
+    <script src="https://kit.fontawesome.com" crossorigin="anonymous"></script>
+    <link href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all" rel="stylesheet" id="font-awesome-5-kit-css">
+    <link href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-font-face.min.css" media="all" rel="stylesheet" id="font-awesome-5-kit-css">
+    <link href="https://kit-free.fontawesome.com" rel="stylesheet" >
+    <script src="https://kit.fontawesome.com/d1f3dd87b7.js" crossorigin="anonymous"></script>
+    <link href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all" rel="stylesheet" id="font-awesome-5-kit-css">
+    <link href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-font-face.min.css" media="all" rel="stylesheet" id="font-awesome-5-kit-css">
+    <link href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all" rel="stylesheet" id="font-awesome-5-kit-css">
+    <script src="https://code.jquery.com" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="script.js"></script>
+  
+
+
+    <script type="text/javascript" src="./lib/raphael-min.js"></script>
+    <script type="text/javascript" src="./lib/es5-shim.min.js"></script>
+    <script type="text/javascript" src="./lib/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="./lib/state-machine.min.js"></script>
+    <script type="text/javascript" src="./lib/async.min.js"></script>
+
+    <script type="text/javascript" src="./lib/ui/jquery.ui.core.min.js"></script>
+    <script type="text/javascript" src="./lib/ui/jquery.ui.widget.min.js"></script>
+    <script type="text/javascript" src="./lib/ui/jquery.ui.mouse.min.js"></script>
+    <script type="text/javascript" src="./lib/ui/jquery.ui.draggable.min.js"></script>
+    <script type="text/javascript" src="./lib/ui/jquery.ui.accordion.min.js"></script>
+    <script type="text/javascript" src="./lib/ui/jquery.ui.slider.min.js"></script>
+
+    <script type="text/javascript" src="./lib/pathfinding-browser.min.js"></script>
+
+    <script type="text/javascript" src="./js/view.js"></script>
+    <script type="text/javascript" src="./js/controller.js"></script>
+    <script type="text/javascript" src="./js/panel.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>
+    
+
+  </head>
+<body class="modal-open" style="padding-right: 16px;">
+  
+
+    <div id="draw_area"></div>
+
+    <div id="instructions_panel" class="panel">
+      <header>
+        <h2 class="header_title">Instructions</h2>
+        <span id="hide_instructions">hide</span>
+      </header>
+      Click within the <span class="black">black</span> grid and drag your mouse to draw obstacles. <br>
+      Drag the <span class="yellow">yellow</span> node to set the start position. <br>
+      Drag the <span class="blue">blue</span> node to set the end position. <br>
+      Choose an algorithm from the right-hand panel. <br>
+      Click Start Search in the lower-right corner to start the animation.
+    </div>
+    
+    <div id="detail_panel" class="panel">
+      <header>
+        <h2 class="header_title">Details of Algorithms</h2>
+        <span id="hide_detail">hide</span>
+      </header>
+      <a href="https://en.wikipedia.org/wiki/A*_search_algorithm" target="_blank">A*</a> &nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Jump_point_search" target="_blank">Jump-Point-Search</a> &nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Iterative_deepening_A*" target="_blank">IDA*</a>&nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Breadth-first_search" target="_blank">Breadth-First-Search</a>&nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Depth-first_search" target="_blank">Depth-First-Search</a>&nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Best-first_search" target="_blank">Best-First-Search</a>&nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm" target="_blank">Dijkstra</a>&nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Heuristic_(computer_science)" target="_blank">Heuristic functions</a> &nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Admissible_heuristic" target="_blank">Manhattan</a>&nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Euclidean_distance" target="_blank">Euclidean</a>&nbsp;&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Chebyshev_distance" target="_blank">Chebyshev</a>&nbsp;&nbsp;
+      <a href="http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html" target="_blank">Octile</a>
+    </div>
+
+    <div id="algorithm_panel" class="panel right_panel">
+      
+      <header><h2 class="header_title">Select Algorithm</h2></header>
+      
+      <div class="accordion">
+        <h3 id="astar_header"><a href="#">A*</a></h3>
+        <div id="astar_section" class="finder_section">
+          <header class="option_header">
+            <h3>Heuristic</h3>
+          </header>
+          <div id="astar_heuristic" class="sub_options">
+            <input type="radio" name="astar_heuristic" value="manhattan" checked />
+            <label class="option_label">Manhattan</label> <br>
+            <input type="radio" name="astar_heuristic" value="euclidean"/>
+            <label class="option_label">Euclidean</label> <br>
+            <input type="radio" name="astar_heuristic" value="octile"/>
+            <label class="option_label">Octile</label> <br>
+            <input type="radio" name="astar_heuristic" value="chebyshev"/>
+            <label class="option_label">Chebyshev</label> <br>
+          </div>
+
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br>
+            <input type="checkbox" class="bi-directional">
+            <label class="option_label">Bi-directional</label> <br>
+            <input type="checkbox" class="dont_cross_corners">
+            <label class="option_label">Don't Cross Corners</label> <br>
+            <input class="spinner" name="astar_weight" value="1">
+            <label class="option_label">Weight</label> <br>
+          </div>
+        </div>
+
+        <h3 id="ida_header"><a href="#">IDA*</a></h3>
+        <div id="ida_section" class="finder_section">
+          <header class="option_header">
+            <h3>Heuristic</h3>
+          </header>
+          <div id="ida_heuristic" class="sub_options">
+            <input type="radio" name="ida_heuristic" value="manhattan" checked />
+            <label class="option_label">Manhattan</label> <br>
+            <input type="radio" name="ida_heuristic" value="euclidean"/>
+            <label class="option_label">Euclidean</label> <br>
+            <input type="radio" name="ida_heuristic" value="octile"/>
+            <label class="option_label">Octile</label> <br>
+            <input type="radio" name="ida_heuristic" value="chebyshev"/>
+            <label class="option_label">Chebyshev</label> <br>
+          </div>
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br>
+            <input type="checkbox" class="dont_cross_corners">
+            <label class="option_label">Don't Cross Corners</label> <br>
+            <input class="spinner" name="astar_weight" value="1">
+            <label class="option_label">Weight</label> <br>
+            <input class="spinner" name="time_limit" value="10">
+            <label class="option_label">Seconds limit</label> <br>
+            <input type="checkbox" class="track_recursion" checked />
+            <label class="option_label">Visualize recursion</label> <br>
+          </div>
+        </div>
+
+        <h3 id="breadthfirst_header"><a href="#">Breadth-First-Search</a></h3>
+        <div id="breadthfirst_section" class="finder_section">
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br>
+            <input type="checkbox" class="bi-directional">
+            <label class="option_label">Bi-directional</label> <br>
+            <input type="checkbox" class="dont_cross_corners">
+            <label class="option_label">Don't Cross Corners</label> <br>
+          </div>
+        </div>
+
+        <h3 id="depthfirst_header"><a href="#">Depth-First-Search</a></h3>
+        <div id="depthfirst_section" class="finder_section">
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br>
+            <input type="checkbox" class="bi-directional">
+            <label class="option_label">Bi-directional</label> <br>
+            <input type="checkbox" class="dont_cross_corners">
+            <label class="option_label">Don't Cross Corners</label> <br>
+          </div>
+        </div>
+
+        <h3 id="bestfirst_header"><a href="#">Best-First-Search</a></h3>
+        <div id="bestfirst_section" class="finder_section">
+          <header class="option_header">
+            <h3>Heuristic</h3>
+          </header>
+          <div id="bestfirst_heuristic" class="sub_options">
+            <input type="radio" name="bestfirst_heuristic" value="manhattan" checked />
+            <label class="option_label">Manhattan</label> <br>
+            <input type="radio" name="bestfirst_heuristic" value="euclidean"/>
+            <label class="option_label">Euclidean</label> <br>
+            <input type="radio" name="bestfirst_heuristic" value="octile"/>
+            <label class="option_label">Octile</label> <br>
+            <input type="radio" name="bestfirst_heuristic" value="chebyshev"/>
+            <label class="option_label">Chebyshev</label> <br>
+          </div>
+
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br>
+            <input type="checkbox" class="bi-directional">
+            <label class="option_label">Bi-directional</label> <br>
+            <input type="checkbox" class="dont_cross_corners">
+            <label class="option_label">Don't Cross Corners</label> <br>
+          </div>
+        </div>
+
+        <h3 id="dijkstra_header"><a href="#">Dijkstra</a></h3>
+        <div id="dijkstra_section" class="finder_section">
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br>
+            <input type="checkbox" class="bi-directional">
+            <label class="option_label">Bi-directional</label> <br>
+            <input type="checkbox" class="dont_cross_corners">
+            <label class="option_label">Don't Cross Corners</label> <br>
+          </div>
+        </div>
+        
+        <h3 id="jump_point_header"><a href="#">Jump Point Search</a></h3>
+        <div id="jump_point_section" class="finder_section">
+          <header class="option_header">
+            <h3>Heuristic</h3>
+          </header>
+          <div id="jump_point_heuristic" class="sub_options">
+            <input type="radio" name="jump_point_heuristic" value="manhattan" checked />
+            <label class="option_label">Manhattan</label> <br>
+            <input type="radio" name="jump_point_heuristic" value="euclidean"/>
+            <label class="option_label">Euclidean</label> <br>
+            <input type="radio" name="jump_point_heuristic" value="chebyshev"/>
+            <label class="option_label">Chebyshev</label> <br>
+          </div>
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="track_recursion" checked>
+            <label class="option_label">Visualize recursion</label> <br>
+          </div>
+        </div>
+
+		<h3 id="orth_jump_point_header"><a href="#">Orthogonal Jump Point Search</a></h3>
+        <div id="orth_jump_point_section" class="finder_section">
+          <header class="option_header">
+            <h3>Heuristic</h3>
+          </header>
+          <div id="orth_jump_point_heuristic" class="sub_options">
+            <input type="radio" name="orth_jump_point_heuristic" value="manhattan" checked />
+            <label class="option_label">Manhattan</label> <br>
+            <input type="radio" name="orth_jump_point_heuristic" value="euclidean"/>
+            <label class="option_label">Euclidean</label> <br>
+            <input type="radio" name="orth_jump_point_heuristic" value="chebyshev"/>
+            <label class="option_label">Chebyshev</label> <br>
+          </div>
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="track_recursion" checked>
+            <label class="option_label">Visualize recursion</label> <br>
+          </div>
+        </div>
+
+        <h3 id="trace_header"><a href="#">Trace</a></h3>
+        <div id="trace_section" class="finder_section">
+          <header class="option_header">
+            <h3>Heuristic</h3>
+          </header>
+          <div id="trace_heuristic" class="sub_options">
+            <input type="radio" name="trace_heuristic" value="manhattan" checked />
+            <label class="option_label">Manhattan</label> <br>
+            <input type="radio" name="trace_heuristic" value="euclidean"/>
+            <label class="option_label">Euclidean</label> <br>
+            <input type="radio" name="trace_heuristic" value="octile"/>
+            <label class="option_label">Octile</label> <br>
+            <input type="radio" name="trace_heuristic" value="chebyshev"/>
+            <label class="option_label">Chebyshev</label> <br>
+          </div>
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br>
+            <input type="checkbox" class="dont_cross_corners">
+            <label class="option_label">Don't Cross Corners</label> <br>
+          </div>
+        </div>
+
+      </div><!-- .accordion -->
+    </div><!-- #algorithm_panel -->
+
+    <div id="play_panel" class="panel right_panel">
+      <button id="button1" class="control_button">Start Search</button>
+      <button id="button2" class="control_button">Pause Search</button>
+      <button id="button3" class="control_button">Clear Walls</button>
+    </div>
+
+    <div id="stats"></div>
+
+    <!-- <footer> -->
+      <!-- Project Hosted on <a href="https://github.com/devanshi-25/Path_F-with-C_Wizards" target="_blank">Github</a> -->
+    <!-- </footer> -->
+   
+    <div class="d-flex flex-row m-4 justify-content-center">
+      <!-- Button trigger for tutorial modal -->
+      <button type="button" class="btn btn-outline-info btn-lg" data-toggle="modal" data-target="#exampleModalLong">Tutorial</button>
+  
+      <!-- Tutorial Modal -->
+      <div class="modal fade show" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" style="padding-right: 16px; display: block;">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="container-fluid" id="modalTitleContainer">
+                <h3 class="modal-title" id="exampleModalLongTitle">Welcome to myPath!</h3>
+              </div>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid" style="line-height: 120%">
+                <em style="font-size: 14px;">This is a quick tutorial that demonstrates how myPath works. If you want to skip this, then press the 'X' in the upper right-hand corner.</em>
+              </div>
+              <hr>
+              <div class="container-fluid">
+                <div class="d-flex flex-column">
+                  <div class="card bg-light">
+                <div class="card-body">
+                  <h5 class="card-title">What are pathfinding algorithms?</h5>
+                  <p class="card-text"><em>Pathfinding algorithms are a class of algorithms that find the shortest path from one node to another on a given graph.</em></p>
+                </div>
+              </div>
+              <br>
+                  <div class="card bg-light">
+                <div class="card-body">
+                  <h5 class="card-title">What is myPath?</h5>
+                  <p class="card-text">
+                  <em>myPath is a visualizing tool that shows how different pathfinding algorithms work. 
+                  </em></p><p><em>The program's objective is to go from the start node to the end node using a pathfinding algorithm. The program can only move horizontally or vertically, with each movement having a cost of one.</em></p><em>
+  
+                  <p>Once the program is complete, the shortest path will be illuminated in yellow.
+                  </p>
+                  </em><p></p>
+                </div>
+              </div>
+              <br>
+              <div class="card border-primary mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Step 1: Choose An Algorithm</h5>
+                  <p class="card-text">Click the 'Algorithms' tab and select one of the algorithms from the dropdown menu.</p>
+                  <p><i>If you want to learn more about the algorithms listed, then click the 'Info' button that is located at the bottom of the page.</i></p>
+                </div>
+                <img class="card-img-bottom" src="images/algorithms.gif" alt="Card image cap" style="height: 20em">
+              </div>
+              <br>
+              <div class="card border-primary mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Step 2: Draw Walls</h5>
+                  <p class="card-text">Click or hold your mouse down over cells to create walls.</p>
+                </div>
+                <img class="card-img-bottom" src="images/walls.gif" alt="Card image cap" style="height: 20em">
+              </div>
+              <br>
+              <div class="card border-primary mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Step 3: Press Start</h5>
+                  <p class="card-text">Press the Start button in the upper right-hand corner to start your pathfinding algorithm!</p>
+                </div>
+                <img class="card-img-bottom" src="images/algorithm-searching.gif" alt="Card image cap" style="height: 20em">
+              </div>
+              <br>
+              <div class="card border-success mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Optional: Move Start/End</h5>
+                  <p class="card-text">Hold the mouse down and drag the start/end node to a new location.</p>
+                </div>
+                <img class="card-img-bottom" src="images/startEnd.gif" alt="Card image cap" style="height: 20em">
+              </div>
+              <br>
+              <div class="card border-success mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Optional: Mazes</h5>
+                  <p class="card-text">Click the 'Mazes' tab and select one of the algorithms from the dropdown menu and a randomized maze will be created for you.</p>
+                </div>
+                <img class="card-img-bottom" src="images/mazes.gif" alt="Card image cap" style="height: 20em">
+              </div>
+              <br>
+              <div class="card border-success">
+                <h5 class="card-header border-success">Enjoy myPath!</h5>
+                <div class="card-body">
+                  <p class="card-text"><em>If you want to revisit this tutorial, click the 'Tutorial' button at the end of the page.</em>
+                  </p><hr>
+                  <p>If you want to see other projects that I've created, check out my github!</p>
+                  <p></p>
+                  <a href="https://github.com/deckardmehdy" class="btn btn-primary">Github</a>
+                </div>
+              </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Button Trigger for Info Modal -->
+      <button type="button" class="btn btn-outline-success btn-circle btn-lg" data-toggle="modal" data-target="#infoModal" id="infoModalBtn">Info</button>
+  
+      <!-- Button Trigger for Info Modal -->
+      <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="container-fluid">
+                <h5 class="modal-title">Algorithms</h5>
+              </div>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+              This section gives brief summaries for each of the maze solving algorithms listed under the Algorithms tab.
+              <br>
+              <br>
+              <div id="accordion">
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Depth-First Search (DFS)
+                  </button>
+                </h5>
+              </div>
+  
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                  <p>
+                    <b>How It Works: </b> DFS starts at the root node and explores as far as possible along each branch before backtracking.
+                  </p>
+                  <p>
+                    <b>Analysis: </b> This is a poor algorithm for pathfinding. It is <u>unweighted</u> and does <u>not</u> guarantee the shortest path.
+                  </p>
+                  <p class="fun-fact">
+                    <i><b>Fun Fact: </b> This algorithm was first investigated in the 19th century by French Mathematician Charles Trémaux.</i>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Breadth-First Search (BFS)
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                  <p>
+                    <b>How It Works: </b> BFS starts at the root node and explores all of the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level.
+                  </p>
+                  <p>
+                    <b>Analysis: </b> This is an OK algorithm for pathfinding. It is <u>unweighted</u> but <u>guarantees</u> the shortest path.
+                  </p>
+                  <p class="fun-fact">
+                    <i><b>Fun Fact: </b> This algorithm was first invented in 1945 by Konrad Zuse and was submitted in his rejected PhD thesis, but was not published until 1972.</i>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="headingThree">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Dijkstra
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                  <p>
+                    <b>How It Works: </b> In Dijkstra's algorithm, all of the nodes in the graph (except the starting node) are initialized with a distance equal to 'infinity.' These distances represents the cost to get from the starting node to the current node, with the starting node having a distance of zero. At the beginning of each iteration, the node with the smallest distance that hasn't been explored yet is visited. These nodes are stored in a min-heap data structure. When a node is visited, all of the neighbors' distances are updated, and if any of the neighbor's distances are lessened, then the algorithm pushes the node onto the min-heap. This continues until the end node has been reached.
+                  </p>
+                  <p>
+                    <b>Analysis: </b> This is an OK algorithm for pathfinding. This algorithm performs very well in trees with unequal distances between nodes. But since this program only explores horizontally/vertically (with each move costing one), it behaves exactly the same as BFS. It is <u>unweighted</u> but <u>guarantees</u> the shortest path.
+                  </p>
+                  <p class="fun-fact">
+                    <i><b>Fun Fact: </b> Edsger Dijkstra invented this algorithm in twenty minutes.</i>
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+            <div class="card">
+              <div class="card-header" id="headingFour">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    Greedy Best-First Search
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                <div class="card-body">
+                  <p>
+                    <b>How It Works:</b> GBFS tries to expand the node that is closest to the goal, on the grounds that this is likely to lead to a solution quickly. It evaluates nodes on a heuristic function, which in myPath is the Euclidean distance from the current node to the end node. 
+                  </p>
+                  <p>
+                    <b>Analysis: </b>This is a poor algorithm for pathfinding. It is <u>weighted</u> but does <u>not</u> guarantee the shortest path. 
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+            <div class="card">
+              <div class="card-header" id="headingFive">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    A*
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                <div class="card-body">
+                  <p>
+                    <b>How It Works: </b> A* uses the same min-heap data structure that is implimented in Dijkstra's, but it expands upon Dijkstra's criteria for selecting the next node to explore. Dijkstra's chooses the node with the smallest distance from the starting node to be explored next. However, A* ranks nodes differently: it has a heuristic function that evaluates how far a node has traveled from the starting node <u>and</u> how far it is from the end node. This heuristic function makes the algorithm 'smart' since it is able to expand in a direction of interest. My implimentation of A* uses Euclidean distance for the end node distance calculation.
+                  </p>
+                  <p>
+                    <b>Analysis: </b> This is the one of the best algorithms for pathfinding. It is <u>weighted</u> and it <u>guarantees</u> the shortest path.
+                  </p>
+                  <p class="fun-fact">
+                    <i><b>Fun Fact: </b> A* was first created for the 'Shakey Project', which had the aim of building a mobile robot that could plan its own actions. It was later published in 1968 by Stanford Research Institute scientists.</i>
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+            <div class="card">
+              <div class="card-header" id="headingSix">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                    Jump Point Search
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
+                <div class="card-body">
+                  <p>
+                    <b>How It Works: </b> Jump Point Search is an optimization of A* for uniform cost grids. It reduces symmertries in the search procedure by graph pruning, which eliminates certain nodes to explore based on the assumptions that can be made about the current node's neighbors (as long as certain conditions are satisfied). My implimentation only considers straight horizontal and vertical 'jumps.' In the original JPS paper, it also considers diagonal jumps, but since my program only moves horizontally and vertically, I decided to not impliment diagonal jumps. This made the algorithm non-optimal, sometimes resulting in the algorithm not being able to find the end node. Despite this, I decided to leave this algorithm in myPath to demonstrate the different types of algorithms out there. 
+                  </p>
+                  <p>
+                    <b>Analysis: </b> This is a great algorithm for pathfinding when there is an explicit maze drawn. It is <u>weighted</u>, but it does <u>not</u> guarantee the shortest path.
+                  </p>
+                  <p class="fun-fact">
+                    <i><b>Fun Fact: </b> JPS was first published in 2011, which is more than 40 years after A* was first published.</i>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  
+  
+    
+  <div class="modal-backdrop fade show"></div>
+</body>
+
+  
+</html>
